@@ -50,7 +50,7 @@ sleepPerMinute = M.fromList . P.map (head &&& length) . group . sort . minutesSl
 
 minutesSleeping :: [Int] -> [Int]
 minutesSleeping [] = []
-minutesSleeping (tSleep:tWake:times) = [minute | minute <- [tSleep .. tWake-1]] ++ minutesSleeping times
+minutesSleeping (tSleep:tWake:times) = [tSleep .. tWake-1] ++ minutesSleeping times
 
 --part1 :: IntMap (IntMap Int) -> Int
 part1 input = guard * minute
