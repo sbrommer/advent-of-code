@@ -1,7 +1,7 @@
 module Main where
 
 import Data.List.Split (splitOn)
-import Data.Map (elems, fromListWith)
+import Data.IntMap (elems, fromListWith)
 import Data.Set (Set, size, (\\), union, unions, singleton, toList)
 import Control.Arrow ((&&&))
 
@@ -16,7 +16,7 @@ parse = map parseLine . lines
 parseLine :: String -> [Int]
 parseLine line = map read [tail i, x, init y, w, h]
     where
-        [i, _, pos, dims] = splitOn " " line
+        [i, _, pos, dims] = words line
         [x, y]            = splitOn "," pos
         [w, h]            = splitOn "x" dims
 

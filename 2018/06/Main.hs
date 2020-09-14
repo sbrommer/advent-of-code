@@ -1,12 +1,11 @@
 module Main where
 
 import Data.List.Split (splitOn)
-import Data.List (sort, nub, elemIndices)
+import Data.List (nub, elemIndices)
 import Data.Set (fromList, toList, difference)
 import Data.Function ((&), on)
 import Control.Arrow ((&&&))
 import Data.Tuple.Extra (both)
-import Debug.Trace
 
 main :: IO()
 main = do

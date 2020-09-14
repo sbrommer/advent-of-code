@@ -2,7 +2,6 @@ module Main where
 
 import Prelude as P
 import Data.List (sort, group, find)
-import Data.List.Split (splitOn)
 import Data.List.Extra (maximumOn, minimumOn, groupOn)
 import Data.Ord (comparing)
 import Data.Function (on)
@@ -31,10 +30,10 @@ parse' (line:lines) = (id, times) : parse' lines'
         times = P.map parseTimeLine timeLines
 
 parseIdLine :: String -> Int
-parseIdLine = read . tail . (!! 3) . splitOn " "
+parseIdLine = read . tail . (!! 3) . words
 
 isGuardLine :: String -> Bool
-isGuardLine = (==) "Guard" . (!! 2) . splitOn " "
+isGuardLine = (==) "Guard" . (!! 2) . words
 
 parseTimeLine :: String -> Int
 parseTimeLine line = read [line !! 15, line !! 16]
@@ -52,13 +51,14 @@ minutesSleeping :: [Int] -> [Int]
 minutesSleeping [] = []
 minutesSleeping (tSleep:tWake:times) = [tSleep .. tWake-1] ++ minutesSleeping times
 
---part1 :: IntMap (IntMap Int) -> Int
+part1 :: IntMap (IntMap Int) -> Int
 part1 input = guard * minute
     where
         minute = fst $ maximumOn snd $ M.toList $ input ! guard
         guard  = fst $ fromJust $ find ((==) maxMinutes . sum . snd) $ M.toList input
         maxMinutes = maximum $ elems $ M.map sum input
 
+part2 :: IntMap (IntMap Int) -> Int
 part2 =
       uncurry (*)
     . mapSnd fst

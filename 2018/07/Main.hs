@@ -4,7 +4,6 @@ module Main where
 
 import Prelude as P
 import Data.Char (ord)
-import Data.List.Split (splitOn)
 import Data.List.Extra (minimumOn)
 import Data.Tuple.Extra (both)
 import Data.Tuple.Lazy (mapSnd)
@@ -25,7 +24,7 @@ parse contents = reqs `M.union` noreqs
         noreqs = M.fromList $ S.toList $ S.map (, empty) steps
 
 parseLine :: String -> (Char, Set Char)
-parseLine = mapSnd singleton . both head . ((!! 7) &&& (!! 1)) . splitOn " "
+parseLine = mapSnd singleton . both head . ((!! 7) &&& (!! 1)) . words
 
 part1 :: Map Char (Set Char) -> String
 part1 reqs = steps1 reqs ""

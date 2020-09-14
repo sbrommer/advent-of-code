@@ -23,7 +23,7 @@ parseTree' :: ([Tree Metadata], Input) -> ([Tree Metadata], Input)
 parseTree' (siblings, c:m:input) = (tree : siblings, drop m input')
     where
         tree = Node (take m input') (reverse children)
-        (children, input') = applyNTimes c parseTree' ([], input)
+        (children, input') = applyN c parseTree' ([], input)
 
 part1 :: Tree Metadata -> Int
 part1 = sum . fmap sum
@@ -40,6 +40,6 @@ part2 tree@(Node metadata children)
 inRange :: Int -> (Int, Int) -> Bool
 inRange n (l, h) = l <= n && n <= h
 
-applyNTimes :: Int -> (a -> a) -> a -> a
-applyNTimes n f x = iterate f x !! n
+applyN :: Int -> (a -> a) -> a -> a
+applyN n f x = iterate f x !! n
 
