@@ -59,13 +59,13 @@ coords = sort . M.keys . carts
 step :: Bool -> System -> Coord -> System
 step clean (System track carts) coord = System track newCarts
     where
-        cart      = carts ! coord
-        newCoord  = nextCoord cart coord
+        oldCart   = carts ! coord
+        newCoord  = nextCoord oldCart coord
         square    = track ! newCoord
         collision = newCoord `member` carts
 
         newCart   | collision && not clean = ('x', undefined)
-                  | otherwise              = nextCart cart square
+                  | otherwise              = nextCart oldCart square
 
         newCarts  | coord `notMember` carts = carts -- When it collided and was cleaned earlier.
                   | collision && clean      = delete newCoord         $ delete coord carts
