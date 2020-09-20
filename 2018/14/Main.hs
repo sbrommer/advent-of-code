@@ -21,12 +21,12 @@ recipes = 3 : 7 : improve 0 1 (fromList [3, 7])
 improve :: Int -> Int -> Seq Int -> [Int]
 improve elf1 elf2 recipes = scores ++ improve elf1' elf2' recipes'
     where
-        score1 = recipes `index` elf1
-        score2 = recipes `index` elf2
-        scores = map digitToInt $ show $ score1 + score2
+        score1   = recipes `index` elf1
+        score2   = recipes `index` elf2
+        scores   = map digitToInt $ show $ score1 + score2
         recipes' = recipes >< fromList scores
-        elf1' = (elf1 + score1 + 1) `mod` S.length recipes'
-        elf2' = (elf2 + score2 + 1) `mod` S.length recipes'
+        elf1'    = (elf1 + score1 + 1) `mod` S.length recipes'
+        elf2'    = (elf2 + score2 + 1) `mod` S.length recipes'
 
 part1 n = map intToDigit $ P.take 10 $ P.drop (read n) recipes
 part2 n = fromJust $ subIndex (map digitToInt n) recipes
