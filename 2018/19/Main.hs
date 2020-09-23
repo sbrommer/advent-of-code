@@ -1,13 +1,10 @@
 module Main where
 
 import Prelude as P
-import Data.IntMap as M
-import Data.Set as S
 import Data.Char (toUpper)
 import Data.List (intercalate)
-import Data.List.Split (chunksOf, splitOn)
+import Data.List.Split (splitOn)
 import Data.List.Tools (setAt)
-import Data.Tuple.Lazy (mapPair, mapSnd)
 import Data.Bits ((.&.), (.|.))
 import Control.Arrow ((&&&))
 
@@ -32,11 +29,11 @@ data Operation = ADDR | ADDI
 
 instance Show Program where
     show (Program ip instructions) =
-        intercalate "\n" (show ip : P.map show instructions)
+        intercalate "\n" $ show ip : P.map show instructions
 
 instance Show Instruction where
     show (Instruction op a b c) =
-        intercalate " " (show op : P.map show [a, b, c])
+        unwords $ show op : P.map show [a, b, c]
 
 main :: IO()
 main = do
@@ -71,8 +68,8 @@ run (Program ip instructions) = run'
             | otherwise = reg : run' ((reg' `setAt` ip) ip')
             where
                 (Instruction op a b c) = instructions !! (reg !! ip)
-                reg' = (reg `setAt` c) result
-                ip' = (reg' !! ip) + 1
+                reg'   = (reg `setAt` c) result
+                ip'    = (reg' !! ip) + 1
                 result = runOperation op reg a b
 
 runOperation :: Operation -> Register -> Int -> Int -> Int
@@ -102,10 +99,9 @@ bool2int :: Bool -> Int
 bool2int True  = 1
 bool2int False = 0
 
-
 part1 :: Program -> Int
 part1 program = head $ last $ run program [0, 0, 0, 0, 0, 0]
 
--- Reverse engineering the input to this.
+-- I reverse engineered the input to this:
 part2 :: a -> Int
 part2 = const (sum $ P.filter ((==) 0 . mod 10551361) [1 .. 10551361])
