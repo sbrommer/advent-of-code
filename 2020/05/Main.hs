@@ -22,8 +22,4 @@ part1 :: [Int] -> Int
 part1 = maximum
 
 part2 :: [Int] -> Int
-part2 ids =
-    let max = maximum ids
-        min = minimum ids
-        sum'
-    in  sum ids - sum [minimum .. maximum]
+part2 ids = sum [minimum ids .. maximum ids] - sum ids
