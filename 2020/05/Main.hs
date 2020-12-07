@@ -22,4 +22,8 @@ part1 :: [Int] -> Int
 part1 = maximum
 
 part2 :: [Int] -> Int
-part2 ids = head $ toList $ fromList [minimum ids .. maximum ids] \\ fromList ids
+part2 ids =
+    let max = maximum ids
+        min = minimum ids
+        sum'
+    in  sum ids - sum [minimum .. maximum]
