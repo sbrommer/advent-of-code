@@ -18,7 +18,7 @@ parse = P.map parseLine . lines
 parseLine :: String -> (Char, Int)
 parseLine = head &&& read . tail
 
--- Sulution
+-- Solution
 part1 :: [(Char, Int)] -> Int
 part1 = manhattan . snd . P.foldl move1 (V2 0 1, V2 0 0)
 
