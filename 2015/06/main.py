@@ -9,7 +9,7 @@ def parse_line(line):
     return op, slice(int(x1), int(x2)+1), slice(int(y1), int(y2)+1)
 
 # part 1
-lights = np.zeros((1000, 1000), dtype = np.bool)
+lights = np.zeros((1000, 1000), dtype = bool)
 
 for line in lines:
     op, sx, sy = parse_line(line)
