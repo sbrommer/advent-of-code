@@ -8,8 +8,7 @@ dists = {}
 
 line = stdin.readline().strip()
 while len(line):
-    frm, to, dist = parse('{} to {} = {}', line)
-    dist = int(dist)
+    frm, to, dist = parse('{} to {} = {:d}', line)
 
     dists[(frm, to)] = dist
     dists[(to, frm)] = dist
