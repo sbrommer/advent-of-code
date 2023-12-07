@@ -1,11 +1,6 @@
 from collections import Counter
 
 
-def parse(line):
-    hand, bid = line.split()
-    return hand, int(bid)
-
-
 def replace_joker(hand):
     normal = hand.replace('J', '')
 
@@ -31,8 +26,8 @@ def hand_value(hand, joker):
 
 def score(lst, joker=False):
     lst = sorted(lst, key=lambda hand_bid: hand_value(hand_bid[0], joker))
-    return sum((i + 1) * b for i, (_, b) in enumerate(lst))
+    return sum((i + 1) * int(b) for i, (_, b) in enumerate(lst))
 
 
-lst = list(map(parse, open(0).readlines()))
+lst = [line.split() for line in open(0).readlines()]
 print(score(lst), score(lst, True))
