@@ -1,9 +1,7 @@
-def diffs(history):
-    return [a - b for a, b in zip(history[1:], history)]
-
-
 def extrapolate(history):
-    return history[-1] + extrapolate(diffs(history)) if history else 0
+    diffs = [a - b for a, b in zip(history[1:], history)]
+
+    return history[-1] + extrapolate(diffs) if history else 0
 
 
 lines = open(0).readlines()
