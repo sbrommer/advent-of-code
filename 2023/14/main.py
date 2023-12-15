@@ -3,8 +3,8 @@ def transpose(platform):
 
 
 def tilt(platform, rev=True):
-    return ['#'.join(''.join(sorted(rock, reverse=rev))
-            for rock in row.split('#')) for row in platform]
+    return tuple('#'.join(''.join(sorted(rock, reverse=rev))
+                 for rock in row.split('#')) for row in platform)
 
 
 def load(platform):
@@ -18,10 +18,6 @@ def cycle(platform):
     return platform
 
 
-def key(platform):
-    return ''.join(platform)
-
-
 platform = [line.strip() for line in open(0)]
 
 # Part 1
@@ -29,15 +25,14 @@ print(load(tilt(transpose(platform))))
 
 # Part 2
 n = 1_000_000_000
-cache = {key(platform): 0}
+cache = {tuple(platform): 0}
 
 for i in range(n):
     platform = cycle(platform)
-    k = key(platform)
-    if k not in cache:
-        cache[k] = i
+    if platform not in cache:
+        cache[platform] = i
     else:
-        for _ in range((n - i) % (i - cache[k]) - 1):
+        for _ in range((n - i) % (i - cache[platform]) - 1):
             platform = cycle(platform)
         break
 
