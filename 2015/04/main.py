@@ -1,21 +1,16 @@
-from sys import stdin
 from hashlib import md5
+from itertools import count
+from more_itertools import first_true
 
-key = stdin.readline().strip()
 
-def get_n(key, head):
-    i = 0
-    while True:
-        n = key + str(i)
-        hash = md5(n.encode('UTF-8')).hexdigest()
+def hash(key, i):
+    return md5((key + str(i)).encode('UTF-8')).hexdigest()
 
-        if hash.startswith(head):
-            return i
 
-        i += 1
+def n(key, head):
+    return first_true(count(),
+                      pred=lambda i: hash(key, i).startswith(head))
 
-# part 1
-print(get_n(key, '00000'))
 
-# part 2
-print(get_n(key, '000000'))
+key = input()
+print(*[n(key, '0' * z) for z in [5, 6]])

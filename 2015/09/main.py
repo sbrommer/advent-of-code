@@ -1,28 +1,18 @@
-from sys import stdin
 from itertools import permutations
-from parse import *
+from more_itertools import pairwise
 
 # Parse input
-cities = set()
-dists = {}
+lines = [line.split() for line in open(0)]
 
-line = stdin.readline().strip()
-while len(line):
-    frm, to, dist = parse('{} to {} = {:d}', line)
+dists = {(l[0], l[2]): int(l[-1]) for l in lines}
 
-    dists[(frm, to)] = dist
-    dists[(to, frm)] = dist
+dists.update({(to, frm): dist for (frm, to), dist in dists.items()})
 
-    cities = cities.union([frm, to])
-
-    line = stdin.readline().strip()
+cities = set.union(*map(set, dists))
 
 # Get total distance for each permutation
-total_dists = set()
-for p in permutations(cities):
-    route = zip(p, p[1:])
-    total_dists.add(sum(dists[r] for r in route))
+total_dists = [sum(map(dists.get, pairwise(p)))
+               for p in permutations(cities)]
 
 # Get answers
-print(min(total_dists))
-print(max(total_dists))
+print(min(total_dists), max(total_dists))

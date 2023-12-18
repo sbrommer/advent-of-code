@@ -1,29 +1,13 @@
-from sys import stdin
+from itertools import accumulate
+from more_itertools import distribute
 
-directions = stdin.readline()
 
-def get_houses(directions):
-    x, y = 0, 0
-    houses = set([(x, y)])
+def visited(directions):
+    return set(accumulate(directions))
 
-    for direction in directions:
-        if direction == '<':
-            x -= 1
-        elif direction == '>':
-            x += 1
-        elif direction == '^':
-            y += 1
-        elif direction == 'v':
-            y -= 1
 
-        houses.add((x, y))
+d_map = {'<': -1j, '>': 1j, '^': -1, 'v': 1}
+directions = [*map(d_map.get, input())]
 
-    return(houses)
-
-# part 1
-print(len(get_houses(directions)))
-
-# part 2
-santa = get_houses(directions[::2])
-robot = get_houses(directions[1::2])
-print(len(santa.union(robot)))
+print(len(visited(directions)),
+      len(set.union(*map(visited, distribute(2, directions)))))

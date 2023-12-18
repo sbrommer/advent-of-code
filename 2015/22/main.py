@@ -3,7 +3,8 @@ from sys import maxsize
 
 hp, dmg = search('Hit points: {:d}\nDamage: {:d}', open(0).read())
 
-def fight(hp_me = 50, hp_boss = hp, mana = 500, magic_missile = 0, drain = 0, shield = 0, poison = 0, recharge = 0, spent = 0, my_turn = True, hard = False):
+
+def fight(hp_me=50, hp_boss=hp, mana=500, magic_missile=0, drain=0, shield=0, poison=0, recharge=0, spent=0, my_turn=True, hard=False):
     global least_spent
     armour = 0
 
@@ -65,17 +66,17 @@ def fight(hp_me = 50, hp_boss = hp, mana = 500, magic_missile = 0, drain = 0, sh
         if 229 <= mana and not recharge:
             fight(hp_me, hp_boss, mana - 229, magic_missile, drain, shield, poison, 5, spent + 229, not my_turn, hard)
 
-    else: # boss_turn
+    else:  # boss_turn
         hp_me -= max(1, dmg - armour)
         if hp_me > 0:
             fight(hp_me, hp_boss, mana, magic_missile, drain, shield, poison, recharge, spent, not my_turn, hard)
 
-# Part 1
+
 least_spent = maxsize
 fight()
 print(least_spent)
 
-# Part 2
+
 least_spent = maxsize
-fight(hard = True)
+fight(hard=True)
 print(least_spent)

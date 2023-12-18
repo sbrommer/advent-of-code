@@ -1,14 +1,12 @@
-import re
+from re import findall
 import numpy as np
 
-# Parse input
-rgx = re.compile(r'-?\d+')
-results = [list(map(int, rgx.findall(line))) for line in open(0)]
+results = [[*map(int, findall(r'-?\d+', line))] for line in open(0)]
 
 ingrs = np.matrix([r[:-1] for r in results])
 cals = np.array([r[-1] for r in results])
 
-# Functions
+
 def score(ams):
     return np.product(np.maximum(ams * ingrs, 0))
 
@@ -22,8 +20,5 @@ def amounts():
     return ams
 
 
-# Part 1
-print(max(map(score, amounts())))
-
-# Part 2
-print(max([score(ams) for ams in amounts() if ams @ cals == 500]))
+print(max(map(score, amounts())),
+      max(score(ams) for ams in amounts() if ams @ cals == 500))

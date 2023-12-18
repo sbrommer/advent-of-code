@@ -11,8 +11,8 @@ def distance(speed, t_fly, t_rest, t=T):
 
 
 # Parse data
-data = list(findall('{:d} km/s for {:d} seconds, but then must rest for {:d}',
-                    open(0).read()))
+data = [*findall('{:d} km/s for {:d} seconds, but then must rest for {:d}',
+                 open(0).read())]
 
 # Part 1
 print(max(starmap(distance, data)))
@@ -21,8 +21,8 @@ print(max(starmap(distance, data)))
 races = [[distance(*deer, t+1) for t in range(T)] for deer in data]
 snapshots = zip(*races)
 
-winners = []
-for s in snapshots:
-    winners += [deer for deer, dist in enumerate(s) if dist == max(s)]
+winners = [deer for s in snapshots
+           for deer, dist in enumerate(s)
+           if dist == max(s)]
 
-print(max([winners.count(w) for w in set(winners)]))
+print(max(map(winners.count, set(winners))))

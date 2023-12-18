@@ -1,16 +1,9 @@
-from sys import stdin
+def to_order(box):
+    l, w, h = sorted(box)
+    return 3*l*w + 2*l*h + 2*w*h, 2*(l+w) + l*w*h
 
-paper = 0
-ribbon = 0
 
-for line in stdin.readlines():
-    l, w, h = list(map(int, line.split('x')))
+boxes = [map(int, box.split('x')) for box in open(0)]
+orders = map(to_order, boxes)
 
-    paper += 2*l*w + 2*w*h + 2*h*l # area
-    paper += min([l*w, w*h, h*l]) # slack
-
-    ribbon += min([2*(l+w), 2*(w+h), 2*(h+l)]) # ribbon
-    ribbon += l*w*h # bow
-
-print(paper)
-print(ribbon)
+print(*map(sum, zip(*orders)))

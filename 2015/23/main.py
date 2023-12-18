@@ -1,54 +1,49 @@
-import re
+from re import findall
 
 
-# Parse
 def parse_line(line):
-    instr, args = re.findall(r'(\w+) (.*)', line)[0]
+    instr, args = findall(r'(\w+) (.*)', line)[0]
     args = args.split(', ')
 
-    return (instr, args)
+    return instr, args
 
 
-program = list(map(parse_line, open(0).readlines()))
+program = [*map(parse_line, open(0))]
 
 
-# Helper function
-def run():
+def run(register):
     i = 0
     while 0 <= i < len(program):
         instr, args = program[i]
 
         offset = 1
 
-        if instr == 'hlf':
-            register[args[0]] //= 2
+        match instr:
+            case 'hlf':
+                register[args[0]] //= 2
 
-        elif instr == 'tpl':
-            register[args[0]] *= 3
+            case 'tpl':
+                register[args[0]] *= 3
 
-        elif instr == 'inc':
-            register[args[0]] += 1
+            case 'inc':
+                register[args[0]] += 1
 
-        elif instr == 'jmp':
-            offset = int(args[0])
+            case 'jmp':
+                offset = int(args[0])
 
-        elif instr == 'jie':
-            if not register[args[0]] % 2:
-                offset = int(args[1])
+            case 'jie':
+                if not register[args[0]] % 2:
+                    offset = int(args[1])
 
-        elif instr == 'jio':
-            if register[args[0]] == 1:
-                offset = int(args[1])
+            case 'jio':
+                if register[args[0]] == 1:
+                    offset = int(args[1])
 
         i += offset
 
+    return register
+
 
 # Part 1
-register = {'a': 0, 'b': 0}
-run()
-print(register['b'])
-
-# Part 2
-register = {'a': 1, 'b': 0}
-run()
-print(register['b'])
+print(*[run(register)['b']
+        for register in [{'a': 0, 'b': 0}, {'a': 1, 'b': 0}]])

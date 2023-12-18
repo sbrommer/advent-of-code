@@ -1,13 +1,6 @@
-from sys import stdin
+file = open(0).read().strip()
 
-n = 0
-m = 0
+literals = file.split('\n')
 
-line = stdin.readline().strip()
-while len(line):
-    n += len(line) - len(eval(line))
-    m += 2 + line.count('\\') + line.count('"')
-    line = stdin.readline().strip()
-
-print(n)
-print(m)
+print(sum(len(l) - len(eval(l)) for l in literals),
+      2 * len(literals) + file.count('\\') + file.count('"'))

@@ -1,13 +1,11 @@
 import numpy as np
 
-# Parse
 n = int(open(0).readline())
 
-# Calculate both parts
 presents = np.zeros((2, n // 10))
-for e in range(1, n // 10):
-    presents[0, e::e] += 10 * e
-    presents[1, e:(50*e)+1:e] += 11 * e
+for elf in range(1, n // 10):
+    presents[0, elf::elf] += 10 * elf
+    presents[1, elf:(50*elf)+1:elf] += 11 * elf
 
 # Part 1
 print(np.where(presents[0,:] >= n)[0][0])

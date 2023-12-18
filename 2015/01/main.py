@@ -1,14 +1,11 @@
-from sys import stdin
+from itertools import accumulate
 
-directions = stdin.readline()
 
-# part 1
-print(directions.count('(') - directions.count(')'))
+def move(p):
+    return 1 if p == '(' else -1
 
-# part 2
-floor = 0
-for i, d in enumerate(directions):
-    floor += (d == '(') - (d == ')')
-    if floor < 0:
-        print(i + 1)
-        break
+
+instructions = input()
+floors = [*accumulate(map(move, instructions))]
+
+print(floors[-1], 1 + floors.index(-1))

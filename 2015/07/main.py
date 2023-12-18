@@ -1,51 +1,44 @@
-from sys import stdin
+from functools import cache
 
-# read circuit
-circuit = {}
-for line in stdin.readlines():
-    line = line.strip()
-    ops, wire = line.split(' -> ')
-    ops = ops.strip().split(' ')
 
-    circuit[wire] = ops
+def parse_line(line):
+    *ops, _, wire = line.split()
+    return wire, ops
 
-# evaluate
-def evaluate(wire, register):
-    def eval(x):
-        return int(x) if x.isdigit() else evaluate(x, register)
 
-    if wire not in register.keys():
-        ops = circuit[wire]
+@cache
+def evaluate(wire='a'):
+    if wire.isdigit():
+        return int(wire)
 
-        if len(ops) == 1:
-            register[wire] = eval(ops[0])
+    ops = circuit[wire]
 
-        elif len(ops) == 2: # ops[0] == 'NOT'
-            x = eval(ops[1])
-            register[wire] = ~x & 0xffff
+    if len(ops) == 1:
+        return evaluate(ops[0])
 
-        else: # len(ops) == 3
-            l = eval(ops[0])
-            r = eval(ops[2])
+    if len(ops) == 2:
+        return ~evaluate(ops[1])
 
-            if ops[1] == 'AND':
-                register[wire] = l & r
+    l, r = evaluate(ops[0]), evaluate(ops[2])
 
-            elif ops[1] == 'OR':
-                register[wire] = l | r
+    match ops[1]:
+        case 'AND':
+            return l & r
 
-            elif ops[1] == 'LSHIFT':
-                register[wire] = l << r
+        case 'OR':
+            return l | r
 
-            else: # ops[1] == 'RSHIFT':
-                register[wire] = l >> r
+        case 'LSHIFT':
+            return l << r
 
-    return register[wire]
+        case 'RSHIFT':
+            return l >> r
 
-# Part 1
-a = evaluate('a', {})
-print(a)
 
-# Part 2
+circuit = dict(map(parse_line, open(0)))
+
+print(a := evaluate(), end=' ')
+
 circuit['b'] = [str(a)]
-print(evaluate('a', {}))
+evaluate.cache_clear()
+print(evaluate())

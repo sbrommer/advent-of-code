@@ -2,23 +2,19 @@ from itertools import permutations
 from parse import parse
 
 
-# Helper functions
 def longest_path(V, E):
     paths = set()
     for p in permutations(V):
-        neighbours = zip(p, list(p[1:]) + [p[0]])
+        neighbours = zip(p, p[1:] + p)
         paths.add(sum(E[v][w] + E[w][v] for v, w in neighbours))
     return max(paths)
 
 
-# Parse input
-lines = open(0).readlines()
-
 graph = {}
 attendees = set()
 
-for line in lines:
-    a, gl, n, b = parse('{} would {} {} happiness units by sitting next to {}.\n',
+for line in open(0):
+    a, gl, h, b = parse('{} would {} {} happiness units by sitting next to {}.\n',
                         line)
 
     attendees |= set([a, b])
@@ -26,11 +22,10 @@ for line in lines:
     if a not in graph:
         graph[a] = {}
 
-    graph[a][b] = ((gl == 'gain') * 2 - 1) * int(n)
+    graph[a][b] = ((gl == 'gain') * 2 - 1) * int(h)
 
 # Part 1
-happiness = longest_path(attendees, graph)
-print(happiness)
+print(longest_path(attendees, graph))
 
 # Part 2
 graph['me'] = {}
@@ -41,5 +36,4 @@ for a in attendees:
 
 attendees.add('me')
 
-happiness2 = longest_path(attendees, graph)
-print(happiness2)
+print(longest_path(attendees, graph))

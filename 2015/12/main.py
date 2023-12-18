@@ -1,10 +1,9 @@
-import re
+from re import findall
 import json
 
 
-# Helper functions
 def sum_of_digits(s):
-    return sum(map(int, re.findall(r'\-?\d+', s)))
+    return sum(map(int, findall(r'\-?\d+', s)))
 
 
 def remove_red(o):
@@ -20,13 +19,12 @@ def remove_red(o):
             remove_red(v)
 
 
-# Read data
-s = open(0).readline()
+document = input()
 
 # Part 1
-print(sum_of_digits(s))
+print(sum_of_digits(document))
 
 # Part 2
-j = json.loads(s)
-remove_red(j)
-print(sum_of_digits(str(j)))
+json_ = json.loads(document)
+remove_red(json_)
+print(sum_of_digits(str(json_)))

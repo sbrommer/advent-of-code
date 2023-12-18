@@ -1,16 +1,15 @@
 from itertools import groupby
 
-x = open(0).readline().strip()
 
-def look_and_say(n):
-    return ''.join([str(len(list(g))) + c for c, g in groupby(n)])
+def apply_n(f, x, n):
+    for i in range(n):
+        x = f(x)
+    return x
 
-# Part 1
-for i in range(40):
-    x = look_and_say(x)
-print(len(x))
 
-# Part 2
-for i in range(10):
-    x = look_and_say(x)
-print(len(x))
+def look_and_say(x):
+    return ''.join([str(len(list(g))) + n for n, g in groupby(x)])
+
+
+x = input()
+print(*[len(apply_n(look_and_say, x, n)) for n in [40, 50]])

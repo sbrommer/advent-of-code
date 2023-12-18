@@ -1,22 +1,22 @@
-import re
 from itertools import combinations
 
 # Parse
-cs = list(map(int, re.compile(r'-?\d+').findall(open(0).read())))
-l = len(cs)
+containers = [*map(int, open(0))]
 
 
 # Helper function
 def count(i):
-    return sum(sum(c) == 150 for c in combinations(cs, i))
+    return sum(sum(c) == 150 for c in combinations(containers, i))
 
 
 def counts():
-    return map(count, range(l))
+    return map(count, range(len(containers)))
 
+
+print(*counts())
 
 # Part 1
 print(sum(counts()))
 
 # Part 2
-print(next(filter(lambda c: c, counts()), None))
+print(min(filter(lambda c: c, counts())))

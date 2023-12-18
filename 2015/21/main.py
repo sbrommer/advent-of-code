@@ -12,7 +12,7 @@ sets = [sum(s) for s in product(ws, am, rs, rs)
         if not all(s[2] == s[3]) or all(s[2] == rs[0, 0])]
 
 # Parse boss
-hp, dmg, amr = np.array(list(search('Hit points: {:d}\nDamage: {:d}\nArmor: {:d}', open(0).read())))
+hp, dmg, amr = [*search('Hit points: {:d}\nDamage: {:d}\nArmor: {:d}', open(0).read())]
 Hp = 100
 
 

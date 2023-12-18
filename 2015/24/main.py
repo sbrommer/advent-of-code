@@ -1,7 +1,7 @@
 from itertools import combinations
 from math import prod
 
-ws = list(map(int, open(0)))
+ws = [*map(int, open(0))]
 
 for n in [3, 4]:
     for r in range(len(ws)):
@@ -9,4 +9,4 @@ for n in [3, 4]:
         if groups:
             break
 
-    print(next(map(prod, groups)))
+    print(min(map(prod, groups)))

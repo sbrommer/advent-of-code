@@ -1,6 +1,6 @@
 from parse import findall
 
-r, c = findall('{:d}', open(0).readline())
+r, c = findall(r'{:d}', input())
 r, c = r[0], c[0]
 n = sum(range(r)) + sum(range(r+1, r+c))
 
