@@ -2,26 +2,31 @@ from functools import reduce
 from operator import xor
 
 
-def hash(sequence, r=1):
+def reverse(string, i):
+    return string[:i][::-1] + string[i:]
+
+
+def move(string, pos):
+    return string[pos:] + string[:pos]
+
+
+def tie_string(sequence, r=1):
     string = list(range(256))
     skip = 0
-    d_pos = 0
+    dpos = 0
 
     for _ in range(r):
         for i in sequence:
-            # reverse
-            string = string[:i][::-1] + string[i:]
-
-            # move pos
             pos = (i+skip) % len(string)
-            d_pos += pos
-            string = string[pos:] + string[:pos]
 
-            # update skip
+            string = reverse(string, i)
+            string = move(string, pos)
+
+            dpos += pos
             skip += 1
 
-    pos = -(d_pos % len(string))  # original position 0
-    return string[pos:] + string[:pos]
+    pos = -(dpos % len(string))  # original position 0
+    return move(string, pos)
 
 
 def dense_hash(hash):
@@ -29,23 +34,25 @@ def dense_hash(hash):
     return map(xor_list, range(0, len(hash), 16))
 
 
-def knot_hash(hash):
+def hex_hash(hash):
     def dec_to_hex(dec): return hex(dec).split('x')[-1].rjust(2, '0')
     return ''.join(map(dec_to_hex, hash))
+
+
+def knot_hash(string):
+    sequence = [ord(c) for c in string] + [17, 31, 73, 47, 23]
+    sparce = tie_string(sequence, 64)
+    dense = dense_hash(sparce)
+    return hex_hash(dense)
 
 
 inp = input()
 
 # part 1
 sequence = map(int, inp.split(','))
-knot = hash(sequence)
+tied_string = tie_string(sequence)
 
-print(knot[0] * knot[1])
+print(tied_string[0] * tied_string[1])
 
 # part 2
-sequence = [ord(c) for c in inp] + [17, 31, 73, 47, 23]
-sparce = hash(sequence, 64)
-dense = dense_hash(sparce)
-knot = knot_hash(dense)
-
-print(knot)
+print(knot_hash(inp))
