@@ -4,7 +4,7 @@ from more_itertools import first_true
 
 
 def hash(key, i):
-    return md5((key + str(i)).encode('UTF-8')).hexdigest()
+    return md5((key + str(i)).encode()).hexdigest()
 
 
 def n(key, head):
