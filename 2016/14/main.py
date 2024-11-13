@@ -3,9 +3,12 @@ from functools import cache
 from re import search
 
 
+salt = input()
+
+
 @cache
 def hash(i, n):
-    h = f'ihaygndm{i}'
+    h = f'{salt}{i}'
     for _ in range(n + 1):
         h = md5(h.encode()).hexdigest()
     return h
@@ -24,7 +27,7 @@ def find(n=0):
     i = 0
 
     while k <= 64:
-        if not (t := three(hash(i, n))) is None:
+        if t := three(hash(i, n)):
             for j in range(i+1, i+1001):
                 if five(hash(j, n), t[0][0]):
                     if k == 64:

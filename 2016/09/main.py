@@ -1,13 +1,9 @@
-# Imports
 import re
 
-# Get input
 data = input()
 
 
-# Helper functions
-def evaluate(data, recurse=True):
-    # End condition of recursion
+def evaluate(data, recurse=False):
     if '(' not in data:
         return len(data)
 
@@ -24,8 +20,4 @@ def evaluate(data, recurse=True):
     return left + r * children + right
 
 
-# Part 1
-print(evaluate(data, recurse=False))
-
-# Part 2
-print(evaluate(data))
+print(evaluate(data), evaluate(data, True))

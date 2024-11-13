@@ -1,68 +1,42 @@
 from hashlib import md5
+from more_itertools import first_true
 
-passcode = 'qljzarfv'
+passcode = input()
 
 
-def neighbours(x, y):
-    ns = set()
-    if y > 0: ns.add('U')
-    if y < 3: ns.add('D')
-    if x > 0: ns.add('L')
-    if x < 3: ns.add('R')
-    return ns
+def in_grid(p):
+    return p.real in range(4) and p.imag in range(4)
 
 
 def doors(path):
-    open_door = 'bcdef'
     seed = f'{passcode}{path}'.encode()
     h = md5(seed).hexdigest()[:4]
-
-    doors = set()
-    if h[0] in open_door: doors.add('U')
-    if h[1] in open_door: doors.add('D')
-    if h[2] in open_door: doors.add('L')
-    if h[3] in open_door: doors.add('R')
-    return doors
-
-
-def moves(path):
-    return neighbours(*run(path)) & doors(path)
-
-
-def next_paths1(path):
-    return set(path + move for move in moves(path))
+    return set('UDLR'[i] for i in range(4) if h[i] in 'bcdef')
 
 
 def next_paths(paths):
-    return set().union(*[next_paths1(path) for path in paths])
+    return {path + door
+            for path in paths
+            for door in doors(path)
+            if in_grid(run(path + door))}
 
 
 def run(path):
-    x, y = 0, 0
-    for step in path:
-        if step == 'U': y -= 1
-        if step == 'D': y += 1
-        if step == 'L': x -= 1
-        if step == 'R': x += 1
-    return x, y
+    steps = {'U': -1j, 'D': 1j, 'L': -1, 'R': 1}
+    return sum(map(steps.get, path))
 
 
-# Part 1
+first, longest = '', 0
+
 paths = ['']
-while (3, 3) not in map(run, paths):
-    paths = next_paths(paths)
 
-print(next(p for p in paths if run(p) == (3, 3)))
-
-# Part 2
-longest = 0
-paths = ['']
 while paths:
     paths = next_paths(paths)
 
-    while (3, 3) in map(run, paths):
-        path = next(p for p in paths if run(p) == (3, 3))
+    while 3+3j in map(run, paths):
+        path = first_true(paths, pred=lambda p: run(p) == 3+3j)
+        first = first or path
         longest = max(longest, len(path))
         paths.remove(path)
 
-print(longest)
+print(first, longest)

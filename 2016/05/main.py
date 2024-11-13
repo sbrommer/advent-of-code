@@ -1,42 +1,36 @@
-# Imports
 from hashlib import md5
+from itertools import count
 
-# Parse
-id = open(0).readline().strip()
-
-
-# Helper functions
-def hash(n):
-    return md5((id + str(n)).encode()).hexdigest()
+door_id = input()
 
 
-# Compute
-password1 = ''
-password2 = ['x'] * 8
+def hash(i):
+    return md5((door_id + str(i)).encode()).hexdigest()
 
-index = 0
-while password2.count('x'):
-    # Find pretty hashes
-    h = hash(index)
-    while h[:5] != '00000':
-        index += 1
-        h = hash(index)
 
-    # Update password 1
-    if len(password1) < 8:
-        password1 += h[5]
+def hashes():
+    for h in map(hash, count()):
+        if h.startswith('00000'):
+            yield h
 
-    # Update password 2
-    if h[5] in '01234567':
-        i = int(h[5])
-        if password2[i] == 'x':
-            password2[i] = h[6]
 
-    # Continue search
-    index += 1
+hs = hashes()
 
-# Part 1
-print(password1)
+pw1 = ''
+pw2 = [''] * 8
 
-# Part 2
-print(''.join(password2))
+while not all(pw2):
+    p, c = next(hs)[5:7]
+
+    if len(pw1) < 8:
+        pw1 += p
+
+    try:
+        p = int(p)
+        if not pw2[p]:
+            pw2[p] = c
+
+    except (ValueError, IndexError):
+        pass
+
+print(pw1, ''.join(pw2))

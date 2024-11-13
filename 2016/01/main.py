@@ -1,28 +1,20 @@
-# Helper functions
-def taxicab(x):
-    return int(abs(x.real) + abs(x.imag))
+def taxicab(p):
+    return int(abs(p.real) + abs(p.imag))
 
 
-# Constants
-rotations = {'R': -1j, 'L': +1j}
+instructions = [([-1j, 1j][i[0] == 'R'], int(i[1:]))
+                for i in input().split(', ')]
 
-# Calculate locations
-## Initalise
-dir = 1j
-loc = 0j
-seen = {loc}
+pos, dir = 0, 1
+visited = {pos}
 hq = None
 
-## Walk
-for i in input().split(', '):
-    dir *= rotations[i[0]]
+for turn, steps in instructions:
+    dir *= turn
+    for _ in range(steps):
+        pos += dir
+        if pos in visited:
+            hq = hq or pos
+        visited |= {pos}
 
-    for b in range(int(i[1:])):
-        loc += dir
-        if hq is None:
-            if loc in seen:
-                hq = loc
-            seen.add(loc)
-
-# Result
-print(*map(taxicab, [loc, hq]))
+print(taxicab(pos), taxicab(hq))

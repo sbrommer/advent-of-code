@@ -6,13 +6,13 @@ output = defaultdict(list)
 gives = dict()
 
 # Parse
-for line in open(0).readlines():
+for line in open(0):
     init = search('value {:d} goes to bot {:d}', line)
     give = search('bot {:d} gives low to {} {:d} and high to {} {:d}', line)
 
     if init:
         v, b = init
-        bot[b].append(v)
+        bot[b] += [v]
 
     if give:
         b, *give = give
@@ -28,8 +28,8 @@ while bot:
 
     t0, n0, t1, n1 = gives[b]
 
-    eval(t0)[n0].append(values[0])
-    eval(t1)[n1].append(values[1])
+    eval(t0)[n0] += [values[0]]
+    eval(t1)[n1] += [values[1]]
 
     del bot[b]
 

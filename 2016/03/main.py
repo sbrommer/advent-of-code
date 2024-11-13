@@ -1,21 +1,20 @@
-# Imports
-import numpy as np
+from more_itertools import chunked
+from itertools import chain
 
 
-# Helper functions
-def is_triangle(sides):
+def valid(sides):
     sides = sorted(sides)
     return sides[0] + sides[1] > sides[2]
 
 
-def count_triangles(array):
-    return sum(np.apply_along_axis(is_triangle, 1, array))
+def solve(triangles):
+    return sum(map(valid, triangles))
 
 
-# Parse
-shapes1 = np.loadtxt(open(0), int)
-shapes2 = shapes1.reshape(-1, 3, 3).transpose((0, 2, 1)).reshape(-1, 3)
+def transform(triangles):
+    return chain(*[chunked(col, 3) for col in zip(*triangles)])
 
-# Calculate
-for shape in [shapes1, shapes2]:
-    print(count_triangles(shape))
+
+triangles = [[*map(int, line.split())] for line in open(0)]
+
+print(solve(triangles), solve(transform(triangles)))

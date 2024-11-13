@@ -17,7 +17,7 @@ def part2(n):
     return w
 
 
-n = 3001330
+n = int(input())
 
 print(part1(n))
 print(part2(n))

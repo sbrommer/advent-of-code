@@ -1,44 +1,30 @@
-# Imports
-import re
 from collections import Counter
+from more_itertools import first_true
 
 
-# Helper functions
-def get_checksum(name):
-    counter = Counter(name).items()
-    counter = sorted(counter, key=lambda t: t[0])
-    counter = sorted(counter, key=lambda t: t[1], reverse=True)
-    return ''.join(map(lambda t: t[0], counter))[:5]
+def parse_line(line):
+    *name, i, checksum = line.replace('[', '-').replace(']\n', '').split('-')
+    return {'name': ''.join(name), 'id': int(i), 'checksum': checksum}
 
 
-def my_ord(c):
-    return ord(c) - ord('a')
+def check(room):
+    counter = Counter(room['name'])
+    sorted_ = sorted(counter.items(), key=lambda kv: (-kv[1], kv[0]))
+    checksum = ''.join(t[0] for t in sorted_[:5])
+    return checksum == room['checksum']
 
 
-def my_chr(n):
-    return chr(ord('a') + n)
+def is_storage(room):
+    def decrypt(c):
+        return chr(97 + (ord(c) + room['id'] - 97) % 26)
+
+    name = ''.join(map(decrypt, room['name']))
+
+    return name == 'northpoleobjectstorage'
 
 
-def decrypt(name, id):
-    def rotate(l):
-        return ' ' if l == ' ' else my_chr((my_ord(l) + id) % 26)
+rooms = [*map(parse_line, open(0))]
+reals = [*filter(check, rooms)]
 
-    return ''.join(map(rotate, ' '.join(name)))
-
-
-sum = 0
-for line in open(0).readlines():
-    # Parse line
-    *name, id, checksum = re.findall(r'\w+', line)
-    id = int(id)
-
-    # Check if room is real
-    if get_checksum(''.join(name)) == checksum:
-        sum += id
-
-        # Check if room is correct
-        if decrypt(name, id) == 'northpole object storage':
-            nos = id
-
-print(sum)
-print(nos)
+print(sum(room['id'] for room in reals),
+      first_true(rooms, pred=is_storage)['id'])

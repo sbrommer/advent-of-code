@@ -4,26 +4,26 @@ from itertools import permutations
 
 def scramble(password, lines):
     for line in lines:
-        if result := search('swap position {:d} with position {:d}', line):
-            password = swap_positions(password, *result)
+        if args := search('swap position {:d} with position {:d}', line):
+            password = swap_positions(password, *args)
 
-        if result := search('swap letter {:w} with letter {:w}', line):
-            password = swap_letters(password, *result)
+        if args := search('swap letter {:w} with letter {:w}', line):
+            password = swap_letters(password, *args)
 
-        if result := search('rotate left {:d}', line):
-            password = rotate_left(password, *result)
+        if args := search('rotate left {:d}', line):
+            password = rotate_left(password, *args)
 
-        if result := search('rotate right {:d}', line):
-            password = rotate_right(password, *result)
+        if args := search('rotate right {:d}', line):
+            password = rotate_right(password, *args)
 
-        if result := search('rotate based on position of letter {:w}', line):
-            password = rotate_position(password, *result)
+        if args := search('rotate based on position of letter {:w}', line):
+            password = rotate_position(password, *args)
 
-        if result := search('reverse positions {:d} through {:d}', line):
-            password = reverse(password, *result)
+        if args := search('reverse positions {:d} through {:d}', line):
+            password = reverse(password, *args)
 
-        if result := search('move position {:d} to position {:d}', line):
-            password = move(password, *result)
+        if args := search('move position {:d} to position {:d}', line):
+            password = move(password, *args)
 
     return ''.join(password)
 
@@ -65,7 +65,7 @@ def move(password, p, q):
     return password[:q] + [temp] + password[q:]
 
 
-lines = open(0).readlines()
+lines = open(0)
 
 # part 1
 password = list('abcdefgh')

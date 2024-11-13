@@ -1,31 +1,32 @@
-regs = {'a': 0, 'b': 0, 'c': 0, 'd': 0}
-lines = [line.split() for line in open(0).readlines()]
+from collections import defaultdict
 
-i = 0
+Is = [line.split() for line in open(0)]
 
-while i < len(lines):
-    instr, *args = lines[i]
 
-    if instr == 'cpy':
-        v, r = args
-        v = int(v) if v.isnumeric() else regs[v]
-        regs[r] = v
+def run(Is, c=0):
+    regs = defaultdict(int)
+    regs['c'] = c
 
-    if instr == 'inc':
-        r = args[0]
-        regs[r] += 1
+    def eval(x):
+        try:
+            return int(x)
+        except ValueError:
+            return regs[x]
 
-    if instr == 'dec':
-        r = args[0]
-        regs[r] -= 1
+    i = 0
 
-    if instr == 'jnz':
-        v, n = args
-        v = int(v) if v.isnumeric() else regs[v]
-        n = int(n)
-        if v:
-            i += n - 1
+    while i < len(Is):
+        instr, *args = Is[i]
+        x, y = args[0], args[-1]
 
-    i += 1
+        match instr:
+            case 'cpy': regs[y] = eval(x)
+            case 'inc': regs[x] += 1
+            case 'dec': regs[x] -= 1
 
-print(regs['a'])
+        i += int(y) if instr == 'jnz' and eval(x) else 1
+
+    return regs['a']
+
+
+print(run(Is), run(Is, 1))

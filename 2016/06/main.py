@@ -1,20 +1,15 @@
 from statistics import mode
 from collections import Counter
 
-# Parse
-input = list(map(list, open(0).read().split('\n')))[:-1]
+signal = [*zip(*open(0))][:-1]
 
 
-# Helper functions
 def least_common(xs):
     return Counter(xs).most_common()[-1][0]
 
 
-# Transpose input
-input = [i for i in zip(*input)]
+def message(f):
+    return ''.join(map(f, signal))
 
-# Part 1
-print(''.join(map(mode, input)))
 
-# Part 2
-print(''.join(map(least_common, input)))
+print(*map(message, [mode, least_common]))

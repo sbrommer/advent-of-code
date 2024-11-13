@@ -1,38 +1,32 @@
-def is_open(x, y):
-    n = x*x + 3*x + 2*x*y + y + y*y
-    n += 1362
-    b = bin(n)
-    c = b.count('1')
-    return not bool(c % 2)
+fav = int(input())
 
 
-def neighbours(x, y):
-    ns = set([(x+1, y), (x, y+1)])
-    if x > 0:
-        ns.add((x-1, y))
-    if y > 0:
-        ns.add((x, y-1))
-    return ns
+def is_space(p):
+    x, y = map(int, [p.real, p.imag])
+    n = x*x + 3*x + 2*x*y + y + y*y + fav
+    return not bin(n).count('1') % 2
 
 
-# Ρart 1
-visited, visiting = set(), set([(1, 1)])
-n = 0
-while (31, 39) not in visiting:
-    n += 1
-    visited |= visiting
-    visiting = set.union(*[neighbours(*loc) for loc in visiting])
-    visiting = set([loc for loc in visiting if is_open(*loc)])
-    visiting -= visited
+def neighbours(p):
+    ps = [p + dp for dp in [-1, 1, -1j, 1j]]
+    return {p for p in ps if p.real >= 0 and p.imag >= 0}
 
-print(n)
 
-# Part 2
-visited, visiting = set(), set([(1, 1)])
-for n in range(51):
-    visited |= visiting
-    visiting = set.union(*[neighbours(*loc) for loc in visiting])
-    visiting = set([loc for loc in visiting if is_open(*loc)])
-    visiting -= visited
+answer1, answer2 = 0, 0
 
-print(len(visited))
+# BFS
+black, gray = set(), {1+1j}
+i = 0
+
+while not answer1 or not answer2:
+    if 31+39j in gray:
+        answer1 |= i
+    if i == 51:
+        answer2 |= len(black)
+
+    i += 1
+    black |= gray
+    gray = {n for p in gray for n in neighbours(p)
+            if is_space(n)} - black
+
+print(answer1, answer2)

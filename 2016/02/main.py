@@ -1,37 +1,28 @@
-# Constants
-moves = {'U': -1j, 'D': 1j, 'R': 1, 'L': -1}
+instructions = [[{'U': -1, 'D': 1, 'R': 1j, 'L': -1j}[i]
+                for i in line.strip()] for line in open(0)]
 
 
-# Parse
-def parse_line(line):
-    return list(map(moves.get, line.strip()))
+def get_code(keypad):
+    pos = [pos for pos, label in keypad.items() if label == '5'][0]
 
-
-lines = list(map(parse_line, open(0).readlines()))
-
-
-# Helper function
-def print_code(button, buttons, labels):
-    for line in lines:
+    code = ''
+    for line in instructions:
         for move in line:
-            if button + move in set(buttons):
-                button += move
-        print(labels[buttons.index(button)], end='')
-    print()
+            if pos + move in keypad:
+                pos += move
+        code += keypad[pos]
+
+    return code
 
 
-# Part 1
-buttons = [0,  1,    2,
-           1j, 1+1j, 2+1j,
-           2j, 1+2j, 2+2j]
+keypad1 = {0: '1',   1j: '2',   2j: '3',
+           1: '4', 1+1j: '5', 1+2j: '6',
+           2: '7', 2+1j: '8', 2+2j: '9'}
 
-print_code(1+1j, buttons, '123456789')
+keypad2 = {                     2j: '1',
+                   1+1j: '2', 1+2j: '3', 1+3j: '4',
+           2: '5', 2+1j: '6', 2+2j: '7', 2+3j: '8', 2+4j: '9',
+                   3+1j: 'A', 3+2j: 'B', 3+3j: 'C',
+                              4+2j: 'D'}
 
-# Part 2
-buttons = [          2,
-               1+1j, 2+1j, 3+1j,
-           2j, 1+2j, 2+2j, 3+2j, 4+2j,
-               1+3j, 2+3j, 3+3j,
-                     2+4j]
-
-print_code(2j, buttons, '123456789ABCD')
+print(get_code(keypad1), get_code(keypad2))

@@ -1,15 +1,19 @@
-def parse_row(row):
-    return [tile == '.' for tile in row]
+from operator import eq
+from itertools import starmap
 
 
 def next_row(row):
-    row = [True] + row + [True]
-    return [row[i] == row[i+2] for i in range(len(row)-2)]
+    return [*starmap(eq, zip([1] + row, row[1:] + [1]))]
 
 
-rows = [parse_row(open(0).readline().strip())]
+def get_safe(row, n):
+    safe = 0
+    for _ in range(n):
+        safe += sum(row)
+        row = next_row(row)
+    return safe
 
-for _ in range(40-1):
-    rows.append(next_row(rows[-1]))
 
-print(sum(row.count(True) for row in rows))
+row = [tile == '.' for tile in input()]
+
+print(get_safe(row, 40), get_safe(row, 400_000))

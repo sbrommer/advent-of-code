@@ -1,57 +1,28 @@
 # Imports
 import re
-from itertools import chain
-
-# Read data
-lines = open(0).readlines()
+from more_itertools import distribute, windowed
 
 
-# Helper functions
-def abba(x):
-    return x[0] == x[3] and x[1] == x[2] and x[0] != x[1]
+def parse(line):
+    parts = re.split(r'[\[\]]', line.strip())
+    ips, hns = distribute(2, parts)
+    return list(ips), list(hns)
 
 
-def get_abbas(xs):
-    slices = [xs[i:i+4] for i in range(len(xs) - 3)]
-    return list(filter(abba, slices))
+def ps(xs, n):
+    return [''.join(w[:2])
+            for x in xs for w in windowed(x, n)
+            if w == w[::-1] and w[0] != w[1]]
 
 
-def aba(x):
-    return x[0] == x[2] and x[0] != x[1]
+def has_abba(xs): return bool(ps(xs, 4))
+def get_abas(xs): return set(ps(xs, 3))
+def get_babs(xs): return set([aba[::-1] for aba in ps(xs, 3)])
 
 
-def get_abas(xs):
-    slices = [xs[i:i+3] for i in range(len(xs) - 2)]
-    return list(filter(aba, slices))
+inp = [parse(line) for line in open(0)]
 
+tls = sum(has_abba(ips) and not has_abba(hns) for ips, hns in inp)
+ssl = sum(bool(get_abas(ips) & get_babs(hns)) for ips, hns in inp)
 
-def get_babs(xs):
-    return [aba[1] + aba[0] + aba[1] for aba in get_abas(xs)]
-
-
-# Calculation
-tls = 0
-ssl = 0
-for line in lines:
-    # Parse line
-    parts = re.split('[\[\]]', line.strip())
-    ips = parts[0::2]
-    hns = parts[1::2]
-
-    # Part 1
-    ips_abbas = map(get_abbas, ips)
-    hns_abbas = map(get_abbas, hns)
-
-    tls += any(ips_abbas) and not any(hns_abbas)
-
-    # Part 2
-    ips_abas = set(chain(*map(get_abas, ips)))
-    hns_babs = set(chain(*map(get_babs, hns)))
-
-    ssl += len(ips_abas.intersection(hns_babs)) > 0
-
-# Part 1
-print(tls)
-
-# Part 2
-print(ssl)
+print(tls, ssl)

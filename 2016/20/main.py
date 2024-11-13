@@ -1,31 +1,20 @@
-from parse import search
-
-
-def part1(n, ranges):
-    m = 0
-    for l, h in ranges:
-        if m < l:
-            return m
-            break
-        else:
-            m = max(m, h + 1)
-
-
-def part2(n, ranges):
+def solve(ranges, part1=True):
     m = 0
     t = 0
+
     for l, h in ranges:
         if m < l:
+            if part1:
+                return m
+
             t += l - m
+
         m = max(m, h + 1)
 
-    return t + n + 1 - m
+    return 4294967296 + t - m
 
 
-n = 4294967295
-
-ranges = [tuple(search('{:d}-{:d}', line)) for line in open(0).readlines()]
+ranges = [tuple(map(int, line.split('-'))) for line in open(0)]
 ranges.sort()
 
-print(part1(n, ranges))
-print(part2(n, ranges))
+print(solve(ranges), solve(ranges, False))
