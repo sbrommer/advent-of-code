@@ -35,10 +35,9 @@ def run(A, B=0, C=0, program=program):
     return out
 
 
-def find_program(program):
+def find(program):
     q = [0]
-    while q:
-        A, *q = q
+    for A in q:
         for A in range(A, A+8):
             r = run(A)
             if r == program:
@@ -47,4 +46,4 @@ def find_program(program):
                 q += [A*8]
 
 
-print(cat(map(str, run(A, B, C))), find_program(program))
+print(cat(map(str, run(A, B, C))), find(program))
