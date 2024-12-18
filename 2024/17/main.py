@@ -8,7 +8,7 @@ A, B, C, *program = map(int, findall(r'\d+', open(0).read()))
 def run(A, B=0, C=0, program=program):
     i, out = 0, []
     while i < len(program):
-        D = {0: 0, 1: 1, 2: 2, 3: 3, 4: A, 5: B, 6: C}
+        D = [0, 1, 2, 3, A, B, C]
 
         opcode, operand = program[i:i+2]
 
